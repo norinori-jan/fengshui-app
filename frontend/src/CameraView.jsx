@@ -1,54 +1,77 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 function formatDirectionSet(directionSet) {
-  if (!directionSet) {
-    return ''
-  }
-
+  if (!directionSet) return ''
   return Object.entries(directionSet)
     .map(([label, info]) => `${label}:${info.direction}`)
     .join(' / ')
 }
 
-function CameraView({ videoRef, onCameraReady, onCameraError, houseInfo }) {
-  useEffect(() => {
-    let stream
 
+function CameraView({ videoRef, onCameraReady, onCameraError, houseInfo }) {
+  const [devices, setDevices] = useState([])
+  const [selectedDeviceId, setSelectedDeviceId] = useState('')
+  const [currentStream, setCurrentStream] = useState(null)
+
+  // カメラ一覧を取得
+  useEffect(() => {
+    const getDevices = async () => {
+      try {
+        const deviceInfos = await navigator.mediaDevices.enumerateDevices()
+        const videoDevices = deviceInfos.filter(d => d.kind === 'videoinput')
+        setDevices(videoDevices)
+        if (videoDevices.length > 0 && !selectedDeviceId) {
+          setSelectedDeviceId(videoDevices[0].deviceId)
+        }
+      } catch (e) {
+        setDevices([])
+      }
+    }
+    getDevices()
+  }, [])
+
+  // カメラ切替
+  useEffect(() => {
+    if (!selectedDeviceId) return
+    let stream = null
     const startCamera = async () => {
+      if (currentStream) {
+        currentStream.getTracks().forEach(t => t.stop())
+      }
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: { ideal: 'environment' },
-          },
-          audio: false,
+          video: { deviceId: { exact: selectedDeviceId } },
+          audio: false
         })
-
         if (videoRef.current) {
           videoRef.current.srcObject = stream
         }
-        if (onCameraReady) {
-          onCameraReady()
-        }
+        setCurrentStream(stream)
+        if (onCameraReady) onCameraReady()
       } catch (error) {
-        if (onCameraError) {
-          onCameraError(new Error(`カメラ起動失敗: ${error.message}`))
-        }
+        if (onCameraError) onCameraError(error)
       }
     }
-
     startCamera()
-
     return () => {
       if (stream) {
-        stream.getTracks().forEach((track) => track.stop())
+        stream.getTracks().forEach(t => t.stop())
       }
     }
-  }, [videoRef, onCameraReady, onCameraError])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDeviceId])
 
   return (
     <div className="camera-layer">
+      <div style={{ position: 'absolute', zIndex: 10, top: 8, right: 8, background: 'rgba(255,255,255,0.7)', borderRadius: 4, padding: 4 }}>
+        <label>カメラ選択: </label>
+        <select value={selectedDeviceId} onChange={e => setSelectedDeviceId(e.target.value)}>
+          {devices.map(d => (
+            <option key={d.deviceId} value={d.deviceId}>{d.label || `カメラ${d.deviceId.slice(-4)}`}</option>
+          ))}
+        </select>
+      </div>
       <video ref={videoRef} className="camera-preview" autoPlay playsInline muted />
-
       {houseInfo && (
         <div className="bazhai-overlay" aria-live="polite">
           <p className="bazhai-title">{houseInfo.house_name}</p>
