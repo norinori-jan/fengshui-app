@@ -6,11 +6,12 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 export default defineConfig({
   plugins: [
     react(),
-    basicSsl() // これで iPhone のカメラ・方位計が動くようになります
+    basicSsl() // iPhoneのカメラ・方位計（Sensor）を動かすための必須プラグイン
   ],
+  base: '/fengshui-app/', // GitHub PagesのURLパスに合わせる設定（重要！）
   server: {
-    host: true, // --host を手動で打たなくてよくなります
+    host: true,   // ローカル開発時にスマホからアクセス可能にする
     port: 5173,
-    https: true // 明示的にHTTPSを有効化
+    https: true   // ローカル開発時もHTTPSで通信する
   }
 })
