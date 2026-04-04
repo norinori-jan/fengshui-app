@@ -5,6 +5,80 @@ import CameraView from './CameraView'
 
 const MOUNTAIN_LABELS = ['午','丁','未','坤','申','庚','酉','辛','戌','乾','亥','壬','子','癸','丑','艮','寅','甲','卯','乙','辰','巽','巳','丙']
 
+// 人盤（中針）専用のマスターデータ
+// 地盤から7.5度回転した独自の24山体系
+const JINBAN_24_DATA = [
+  { name: '壬', element: '火', star: '...', range: [330.5, 345.0] },
+  { name: '子', element: '火', star: '...', range: [345.0, 360.4] }, // 360度を跨ぐ境界
+  { name: '癸', element: '土', star: '...', range: [0.4, 15.0] },    // 360.4を0.4として処理
+  { name: '丑', element: '金', star: '...', range: [15.0, 30.0] },
+  { name: '艮', element: '木', star: '...', range: [30.0, 45.0] },
+  { name: '寅', element: '水', star: '...', range: [45.0, 61.0] },
+  { name: '甲', element: '火', star: '...', range: [61.0, 75.3] },
+  { name: '卯', element: '火', star: '...', range: [75.3, 90.0] },
+  { name: '乙', element: '土', star: '...', range: [90.0, 105.0] },
+  { name: '辰', element: '金', star: '...', range: [105.0, 120.0] },
+  { name: '巽', element: '木', star: '...', range: [120.0, 135.0] },
+  { name: '巳', element: '水', star: '...', range: [135.0, 150.0] },
+  { name: '丙', element: '火', star: '...', range: [150.0, 165.0] },
+  { name: '午', element: '火', star: '...', range: [165.0, 180.0] },
+  { name: '丁', element: '土', star: '...', range: [180.0, 195.0] },
+  { name: '未', element: '金', star: '...', range: [195.0, 210.0] },
+  { name: '坤', element: '木', star: '...', range: [210.0, 225.0] },
+  { name: '申', element: '水', star: '...', range: [225.0, 240.0] },
+  { name: '庚', element: '火', star: '...', range: [240.0, 255.0] },
+  { name: '酉', element: '火', star: '...', range: [255.0, 270.0] },
+  { name: '辛', element: '土', star: '...', range: [270.0, 285.0] },
+  { name: '戌', element: '金', star: '...', range: [285.0, 300.0] },
+  { name: '乾', element: '木', star: '...', range: [300.0, 315.2] },
+  { name: '亥', element: '水', star: '...', range: [315.2, 330.5] }
+]
+
+const L10_LIST = [
+  '辛亥', '癸亥', '甲子', '丙子', '戊子', '庚子', '壬子', '乙丑', '丁丑', '巳丑',
+  '辛丑', '癸丑', '丙寅', '戊寅', '庚寅', '壬寅', '甲寅', '丁卯', '巳卯', '辛卯',
+  '癸卯', '乙卯', '戊辰', '庚辰', '壬辰', '甲辰', '丙辰', '己巳', '辛巳', '癸巳',
+  '乙巳', '丁巳', '庚午', '壬午', '甲午', '丙午', '戊午', '辛未', '癸未', '乙未',
+  '丁未', '己未', '壬申', '甲申', '丙申', '戊申', '庚申', '癸酉', '乙酉', '丁酉',
+  '己酉', '辛酉', '甲戌', '丙戌', '戊戌', '庚戌', '壬戌', '乙亥', '丁亥', '己亥'
+]
+
+const L11_LIST = [
+  '正亥', '七亥三壬', '三亥七壬', '正壬', '五壬子', '正子', '七子三癸', '三子七癸', '正癸', '五癸丑',
+  '正丑', '七丑三艮', '三丑七艮', '正艮', '五艮寅', '正寅', '七寅三甲', '三寅七甲', '正甲', '五甲卯',
+  '正卯', '七卯三乙', '三卯七乙', '正乙', '五乙辰', '正辰', '七辰三巽', '三辰七巽', '正巽', '五巽巳',
+  '正巳', '七巳三丙', '三巳七丙', '正丙', '五丙午', '正午', '七午三丁', '三午七丁', '正丁', '五丁未',
+  '正未', '七未三坤', '三未七坤', '正坤', '五坤申', '正申', '七申三庚', '三申七庚', '正庚', '五庚酉',
+  '正酉', '七酉三辛', '三酉七辛', '正辛', '五辛戌', '正戌', '七戌三乾', '三戌七乾', '正乾', '五乾亥'
+]
+
+const L13_LIST = [
+  ['空', '丁亥', '空', '辛亥', '空'], // 亥
+  ['空', '丁亥', '空', '辛亥', '空'], // 壬
+  ['空', '丙子', '空', '庚子', '空'], // 子
+  ['空', '丙子', '空', '庚子', '空'], // 癸
+  ['空', '丁丑', '空', '辛丑', '空'], // 丑
+  ['空', '丁丑', '空', '辛丑', '空'], // 艮
+  ['空', '丙寅', '空', '庚寅', '空'], // 寅
+  ['空', '丙寅', '空', '庚寅', '空'], // 甲
+  ['空', '丁卯', '空', '辛卯', '空'], // 卯
+  ['空', '丁卯', '空', '辛卯', '空'], // 乙
+  ['空', '丙辰', '空', '庚辰', '空'], // 辰
+  ['空', '丙辰', '空', '庚辰', '空'], // 巽
+  ['空', '丁巳', '空', '辛巳', '空'], // 巳
+  ['空', '丁巳', '空', '辛巳', '空'], // 丙
+  ['空', '丙午', '空', '庚午', '空'], // 午
+  ['空', '丙午', '空', '庚午', '空'], // 丁
+  ['空', '丁未', '空', '辛未', '空'], // 未
+  ['空', '丁未', '空', '辛未', '空'], // 坤
+  ['空', '丙申', '空', '庚申', '空'], // 申
+  ['空', '丙申', '空', '庚申', '空'], // 庚
+  ['空', '丁酉', '空', '辛酉', '空'], // 酉
+  ['空', '丁酉', '空', '辛酉', '空'], // 辛
+  ['空', '丙戌', '空', '庚戌', '空'], // 戌
+  ['空', '丙戌', '空', '庚戌', '空']  // 乾
+]
+
 const LOPAN_MASTER_DATA = [
   {
     symbol: '☷', gua: '坤', range: [338.0, 22.7],
@@ -93,33 +167,7 @@ const describeArcSegment = (cx, cy, innerR, outerR, startAngle, endAngle) => {
 }
 
 function analyzeLopan(degree) {
-  const normalized = ((degree - 338 + 360) % 360)
-  const guaIndex = Math.floor(normalized / 45) % 8
-  const guaData = LOPAN_MASTER_DATA[guaIndex]
-  const dWithinGua = normalized % 45
-  const slotIndex = Math.min(2, Math.floor(dWithinGua / 15))
-  const slotData = guaData.slots[slotIndex]
-  const dWithinSlot = dWithinGua % 15
-  const l7Index = Math.min(2, Math.floor(dWithinSlot / 5))
-  const l8Index = Math.min(4, Math.floor(dWithinSlot / 3))
-  return {
-    angle: `${degree.toFixed(1)}°`,
-    L1_卦: `${guaData.symbol} (${guaData.gua})`,
-    L2_二十四山: slotData.l2,
-    L3_詳細格: slotData.l3,
-    L4_天星: slotData.l4,
-    L5_九星: slotData.l5,
-    L6_地盤五行: `${slotData.l6}(${slotData.element})`,
-    L7_分金: slotData.l7[l7Index],
-    L8_透地: slotData.l8[l8Index],
-    isImportant: slotData.is_important,
-    guaData,
-    slotData,
-    normalized,
-    slotIndex,
-    l7Index,
-    l8Index
-  }
+  return analyzeAllLayers(degree)
 }
 
 function App() {
@@ -133,6 +181,7 @@ function App() {
   const [saveStatus, setSaveStatus] = useState('idle')
   const [selectedCameraId, setSelectedCameraId] = useState('')
   const [compassStatus, setCompassStatus] = useState('未有効')
+  const [activeLayer, setActiveLayer] = useState('L1')
   const headingQueueRef = useRef([])
   const rafRef = useRef(null)
 
@@ -143,12 +192,39 @@ function App() {
 
   const analyzed = useMemo(() => analyzeLopan(combinedAngle), [combinedAngle])
 
+  const getLayerText = (layer) => {
+    switch (layer) {
+      case 'L1': return analyzed.L1_卦
+      case 'L2': return analyzed.L2_二十四山
+      case 'L3': return analyzed.L3_詳細格
+      case 'L4': return analyzed.L4_天星
+      case 'L5': return analyzed.L5_九星
+      case 'L6': return analyzed.L6_地盤五行
+      case 'L7': return analyzed.L7_分金
+      case 'L8': return analyzed.L8_透地
+      case 'L9': return analyzed.L9_人盤
+      case 'L10': return analyzed.L10_六十龍
+      case 'L11': return analyzed.L11_属性
+      case 'L12': return analyzed.L12_天盤
+      case 'L13': return analyzed.L13_天盤分金
+      default: return analyzed.L1_卦
+    }
+  }
+
   useEffect(() => {
     const handleOrientation = (e) => {
-      const raw = e.webkitCompassHeading ?? (e.alpha != null ? (360 - e.alpha + 360) % 360 : undefined)
-      if (raw == null || Number.isNaN(raw)) return
-      headingQueueRef.current.push(raw)
-      if (headingQueueRef.current.length > 8) headingQueueRef.current.shift()
+      let raw = null
+      if (e.webkitCompassHeading != null) {
+        raw = e.webkitCompassHeading
+      } else if (e.alpha != null) {
+        // iOS Safariではalphaがデバイス回転を表す場合があるが、通常はデバイス回転
+        // 簡易的に360 - e.alphaを使用（実際のキャリブレーションが必要）
+        raw = (360 - e.alpha) % 360
+      }
+      if (raw != null && !isNaN(raw)) {
+        headingQueueRef.current.push(raw)
+        if (headingQueueRef.current.length > 5) headingQueueRef.current.shift() // レスポンス改善のためキューを短く
+      }
     }
 
     const tick = () => {
@@ -209,6 +285,11 @@ function App() {
         L6_地盤五行: analyzed.L6_地盤五行,
         L7_分金: analyzed.L7_分金,
         L8_透地: analyzed.L8_透地,
+        L9_人盤: analyzed.L9_人盤,
+        L10_六十龍: analyzed.L10_六十龍,
+        L11_属性: analyzed.L11_属性,
+        L12_天盤: analyzed.L12_天盤,
+        L13_天盤分金: analyzed.L13_天盤分金,
         isImportant: analyzed.isImportant ? '重要' : '通常',
         elevation,
         note,
@@ -312,13 +393,13 @@ function App() {
           })}
 
           <circle cx={center} cy={center} r={110} fill="rgba(0,0,0,0.65)" stroke="rgba(212,175,55,0.8)" strokeWidth="2" />
-          <text x={center} y={center - 14} fill={analyzed.isImportant ? '#ff6b6b' : '#fff'} fontSize="46" fontWeight="900" textAnchor="middle" dominantBaseline="middle">{analyzed.L1_卦}</text>
+          <text x={center} y={center - 14} fill={analyzed.isImportant ? '#ff6b6b' : '#fff'} fontSize="46" fontWeight="900" textAnchor="middle" dominantBaseline="middle">{getLayerText(activeLayer)}</text>
           <text x={center} y={center + 24} fill="#fff" fontSize="16" textAnchor="middle" dominantBaseline="middle">{analyzed.L2_二十四山}</text>
         </svg>
       </div>
 
       <div className="center-overlay">
-        <p className="overlay-mountain">{analyzed.L1_卦}</p>
+        <p className="overlay-mountain">{getLayerText(activeLayer)}</p>
         <p className="overlay-degree">{analyzed.angle}</p>
       </div>
 
@@ -338,6 +419,15 @@ function App() {
           <p className="small-note">センサー状態: {compassStatus}</p>
 
           <div style={{ marginBottom: '15px' }}>
+            <label style={{ fontSize: '10px', opacity: 0.7 }}>表示層選択:</label>
+            <select value={activeLayer} onChange={(e) => setActiveLayer(e.target.value)} style={{ width: '100%', background: '#333', color: '#fff', border: '1px solid #555', padding: '10px', borderRadius: '5px' }}>
+              {layers.map(layer => (
+                <option key={layer.id} value={layer.id}>{layer.id}（{layer.name}）</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
             <label style={{ fontSize: '10px', opacity: 0.7 }}>カメラ切り替え:</label>
             <CameraSelector onSelect={setSelectedCameraId} currentId={selectedCameraId} />
           </div>
@@ -351,6 +441,11 @@ function App() {
             <p><strong>L6:</strong> {analyzed.L6_地盤五行}</p>
             <p><strong>L7:</strong> {analyzed.L7_分金}</p>
             <p><strong>L8:</strong> {analyzed.L8_透地}</p>
+            <p><strong>L9:</strong> {analyzed.L9_人盤}</p>
+            <p><strong>L10:</strong> {analyzed.L10_六十龍}</p>
+            <p><strong>L11:</strong> {analyzed.L11_属性}</p>
+            <p><strong>L12:</strong> {analyzed.L12_天盤}</p>
+            <p><strong>L13:</strong> {analyzed.L13_天盤分金}</p>
             <p style={{ color: analyzed.isImportant ? '#ff6b6b' : '#fff' }}><strong>重要:</strong> {analyzed.isImportant ? 'はい' : 'いいえ'}</p>
           </div>
 
