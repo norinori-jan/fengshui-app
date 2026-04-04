@@ -1,44 +1,30 @@
-# Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
-
 on:
-  # main ブランチへの push を検知して自動実行
   push:
     branches: ["main"]
-
-  # Actions タブから手動実行も可能にする
   workflow_dispatch:
 
-# GitHub Pages へのデプロイに必要な権限設定
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 二重実行を防ぐ設定
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps: deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
       - name: Setup Pages
-        uses: actions/configure-pages@v5
-        
+        uses: actions/configure-pages@v4
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 【重要】ここを '.' から 'frontend/dist' に変更
+          # ここで frontend/dist を指定するのがポイント！
           path: 'frontend/dist'
-          
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4
