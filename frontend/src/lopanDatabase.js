@@ -81,6 +81,229 @@ const L13_LIST = [
   ['空', '丙戌', '空', '庚戌', '空']  // 乾
 ]
 
+// 1. 八卦記号のマッピング
+const BAGUA_MAP = {
+  1: '1 ☷', 2: '2 ☴', 3: '3 ☲', 4: '4 ☱',
+  6: '6 ☶', 7: '7 ☵', 8: '8 ☳', 9: '9 ☰'
+}
+
+const BAGUA_OPPOSITE = {
+  1: '9 ☰', // 坤 ↔ 乾
+  2: '8 ☳', // 巽 ↔ 震
+  3: '7 ☵', // 離 ↔ 坎
+  4: '6 ☶', // 兌 ↔ 艮
+  6: '4 ☱',
+  7: '3 ☲',
+  8: '2 ☴',
+  9: '1 ☷'
+}
+
+// L14-L16: 六十四卦・九星複合盤マスターデータ
+const L14_16_MASTER_DATA = [
+  { bagua: '8 ☳', guaName: '無妄', nineStar: '輔西' },
+  { bagua: '3 ☲', guaName: '同人', nineStar: '禄東' },
+  { bagua: '4 ☱', guaName: '履', nineStar: '文東' },
+  { bagua: '9 ☰', guaName: '乾', nineStar: '弼北' },
+  { bagua: '9 ☰', guaName: '小畜', nineStar: '巨東' },
+  { bagua: '4 ☱', guaName: '中孚', nineStar: '破西' },
+  { bagua: '3 ☲', guaName: '家人', nineStar: '武西' },
+  { bagua: '8 ☳', guaName: '益', nineStar: '貪南' },
+  { bagua: '2 ☴', guaName: '巽', nineStar: '弼北' },
+  { bagua: '7 ☵', guaName: '渙', nineStar: '文東' },
+  { bagua: '6 ☶', guaName: '漸', nineStar: '禄東' },
+  { bagua: '1 ☷', guaName: '觀', nineStar: '輔西' },
+  { bagua: '9 ☰', guaName: '需', nineStar: '破西' },
+  { bagua: '4 ☱', guaName: '節', nineStar: '巨東' },
+  { bagua: '3 ☲', guaName: '既済', nineStar: '貪南' },
+  { bagua: '8 ☳', guaName: '屯', nineStar: '武西' },
+  { bagua: '2 ☴', guaName: '井', nineStar: '分東' },
+  { bagua: '7 ☵', guaName: '坎', nineStar: '弼東' },
+  { bagua: '6 ☶', guaName: '蹇', nineStar: '輔西' },
+  { bagua: '1 ☷', guaName: '比', nineStar: '禄東' },
+  { bagua: '9 ☰', guaName: '大畜', nineStar: '武西' },
+  { bagua: '4 ☱', guaName: '損', nineStar: '貪南' },
+  { bagua: '3 ☲', guaName: '賁', nineStar: '巨東' },
+  { bagua: '8 ☳', guaName: '頣', nineStar: '破西' },
+  { bagua: '2 ☴', guaName: '蠱', nineStar: '禄東' },
+  { bagua: '7 ☵', guaName: '蒙', nineStar: '輔西' },
+  { bagua: '6 ☶', guaName: '艮', nineStar: '弼北' },
+  { bagua: '1 ☷', guaName: '剥', nineStar: '分東' },
+  { bagua: '9 ☰', guaName: '泰', nineStar: '貪南' },
+  { bagua: '4 ☱', guaName: '臨', nineStar: '武西' },
+  { bagua: '3 ☲', guaName: '明夷', nineStar: '破西' },
+  { bagua: '8 ☳', guaName: '復', nineStar: '巨東' },
+  { bagua: '2 ☴', guaName: '升', nineStar: '輔西' },
+  { bagua: '7 ☵', guaName: '師', nineStar: '禄東' },
+  { bagua: '6 ☶', guaName: '謙', nineStar: '文東' },
+  { bagua: '1 ☷', guaName: '坤', nineStar: '弼北' },
+  { bagua: '1 ☷', guaName: '豫', nineStar: '巨東' },
+  { bagua: '6 ☶', guaName: '小過', nineStar: '破西' },
+  { bagua: '7 ☵', guaName: '解', nineStar: '武西' },
+  { bagua: '2 ☴', guaName: '恆', nineStar: '貪南' },
+  { bagua: '8 ☳', guaName: '震', nineStar: '弼北' },
+  { bagua: '3 ☲', guaName: '豊', nineStar: '文東' },
+  { bagua: '4 ☱', guaName: '帰妹', nineStar: '禄東' },
+  { bagua: '9 ☰', guaName: '大壮', nineStar: '弼西' },
+  { bagua: '1 ☷', guaName: '晋', nineStar: '破西' },
+  { bagua: '6 ☶', guaName: '旅', nineStar: '巨東' },
+  { bagua: '7 ☵', guaName: '未済', nineStar: '貪南' },
+  { bagua: '2 ☴', guaName: '鼎', nineStar: '武西' },
+  { bagua: '8 ☳', guaName: '噬嗑', nineStar: '分東' },
+  { bagua: '3 ☲', guaName: '離', nineStar: '弼北' },
+  { bagua: '4 ☱', guaName: '睽', nineStar: '輔西' },
+  { bagua: '9 ☰', guaName: '大有', nineStar: '禄東' },
+  { bagua: '1 ☷', guaName: '萃', nineStar: '武西' },
+  { bagua: '6 ☶', guaName: '咸', nineStar: '貪南' },
+  { bagua: '7 ☵', guaName: '困', nineStar: '巨東' },
+  { bagua: '2 ☴', guaName: '大過', nineStar: '破西' },
+  { bagua: '8 ☳', guaName: '随', nineStar: '禄東' },
+  { bagua: '3 ☲', guaName: '革', nineStar: '輔西' },
+  { bagua: '4 ☱', guaName: '兌', nineStar: '弼北' },
+  { bagua: '9 ☰', guaName: '夬', nineStar: '分東' },
+  { bagua: '1 ☷', guaName: '否', nineStar: '貪南' },
+  { bagua: '6 ☶', guaName: '遯', nineStar: '武西' },
+  { bagua: '7 ☵', guaName: '訟', nineStar: '破西' },
+  { bagua: '2 ☴', guaName: '姤', nineStar: '巨東' }
+]
+
+// L19-L20: 干支盤・属性九星盤マスターデータ
+const L19_20_MASTER_DATA = [
+  { ganZhi: '丁亥', attributeNineStar: '天輔' },
+  { ganZhi: '己亥', attributeNineStar: '天巨' },
+  { ganZhi: '辛亥', attributeNineStar: '人破' },
+  { ganZhi: '癸亥', attributeNineStar: '地武' },
+  { ganZhi: '甲子', attributeNineStar: '父貪' },
+  { ganZhi: '甲子', attributeNineStar: '天輔' },
+  { ganZhi: '丙子', attributeNineStar: '人禄' },
+  { ganZhi: '戊子', attributeNineStar: '地文' },
+  { ganZhi: '庚子', attributeNineStar: '母弼' },
+  { ganZhi: '壬子', attributeNineStar: '父貪' },
+  { ganZhi: '乙丑', attributeNineStar: '地武' },
+  { ganZhi: '丁丑', attributeNineStar: '人破' },
+  { ganZhi: '己丑', attributeNineStar: '天巨' },
+  { ganZhi: '辛丑', attributeNineStar: '人禄' },
+  { ganZhi: '癸丑', attributeNineStar: '天輔' },
+  { ganZhi: '甲寅', attributeNineStar: '母弼' },
+  { ganZhi: '丙寅', attributeNineStar: '地文' },
+  { ganZhi: '戊寅', attributeNineStar: '地武' },
+  { ganZhi: '庚寅', attributeNineStar: '父貪' },
+  { ganZhi: '庚寅', attributeNineStar: '天巨' },
+  { ganZhi: '壬寅', attributeNineStar: '人破' },
+  { ganZhi: '乙卯', attributeNineStar: '地文' },
+  { ganZhi: '丁卯', attributeNineStar: '母弼' },
+  { ganZhi: '己卯', attributeNineStar: '天輔' },
+  { ganZhi: '辛卯', attributeNineStar: '人禄' },
+  { ganZhi: '癸卯', attributeNineStar: '人破' },
+  { ganZhi: '甲辰', attributeNineStar: '天巨' },
+  { ganZhi: '丙辰', attributeNineStar: '父貪' },
+  { ganZhi: '戊辰', attributeNineStar: '地武' },
+  { ganZhi: '庚辰', attributeNineStar: '母弼' },
+  { ganZhi: '壬辰', attributeNineStar: '地文' },
+  { ganZhi: '乙巳', attributeNineStar: '人禄' },
+  { ganZhi: '丁巳', attributeNineStar: '天輔' },
+  { ganZhi: '己巳', attributeNineStar: '天巨' },
+  { ganZhi: '辛巳', attributeNineStar: '人破' },
+  { ganZhi: '癸巳', attributeNineStar: '地武' },
+  { ganZhi: '甲午', attributeNineStar: '父貪' },
+  { ganZhi: '甲午', attributeNineStar: '天輔' },
+  { ganZhi: '丙午', attributeNineStar: '人禄' },
+  { ganZhi: '戊午', attributeNineStar: '地文' },
+  { ganZhi: '庚午', attributeNineStar: '母弼' },
+  { ganZhi: '壬午', attributeNineStar: '父貪' },
+  { ganZhi: '乙未', attributeNineStar: '地武' },
+  { ganZhi: '丁未', attributeNineStar: '人破' },
+  { ganZhi: '己未', attributeNineStar: '天巨' },
+  { ganZhi: '辛未', attributeNineStar: '人禄' },
+  { ganZhi: '癸未', attributeNineStar: '天輔' },
+  { ganZhi: '甲申', attributeNineStar: '母弼' },
+  { ganZhi: '丙申', attributeNineStar: '地文' },
+  { ganZhi: '戊申', attributeNineStar: '地武' },
+  { ganZhi: '庚申', attributeNineStar: '父貪' },
+  { ganZhi: '庚申', attributeNineStar: '天巨' },
+  { ganZhi: '壬申', attributeNineStar: '人破' },
+  { ganZhi: '乙酉', attributeNineStar: '地文' },
+  { ganZhi: '丁酉', attributeNineStar: '母弼' },
+  { ganZhi: '己酉', attributeNineStar: '天輔' },
+  { ganZhi: '辛酉', attributeNineStar: '人禄' },
+  { ganZhi: '癸酉', attributeNineStar: '人破' },
+  { ganZhi: '甲戌', attributeNineStar: '天巨' },
+  { ganZhi: '丙戌', attributeNineStar: '父貪' },
+  { ganZhi: '戊戌', attributeNineStar: '地武' },
+  { ganZhi: '庚戌', attributeNineStar: '母弼' },
+  { ganZhi: '壬戌', attributeNineStar: '地文' },
+  { ganZhi: '乙亥', attributeNineStar: '人禄' }
+]
+
+// 3. L14, L15, L16の計算関数
+function calculateL14(degree) {
+  // 338.0度を起点(インデックス0)にするためのオフセット計算
+  // 360等分ではなく、64スロット(1つ5.625度)として計算
+  const offset = 338.0
+  let normalized = (degree - offset + 360) % 360
+  
+  // 64等分した時のインデックスを算出
+  const index = Math.floor(normalized / (360 / 64))
+  
+  return L14_16_MASTER_DATA[index % 64].bagua
+}
+
+function calculateL15(degree) {
+  // 338.0度を起点(インデックス0)にするためのオフセット計算
+  // 360等分ではなく、64スロット(1つ5.625度)として計算
+  const offset = 338.0
+  let normalized = (degree - offset + 360) % 360
+  
+  // 64等分した時のインデックスを算出
+  const index = Math.floor(normalized / (360 / 64))
+  
+  return L14_16_MASTER_DATA[index % 64].guaName
+}
+
+function calculateL16(degree) {
+  // 338.0度を起点(インデックス0)にするためのオフセット計算
+  // 360等分ではなく、64スロット(1つ5.625度)として計算
+  const offset = 338.0
+  let normalized = (degree - offset + 360) % 360
+  
+  // 64等分した時のインデックスを算出
+  const index = Math.floor(normalized / (360 / 64))
+  
+  return L14_16_MASTER_DATA[index % 64].nineStar
+}
+
+function calculateL17(degree) {
+  const offset = 338.0
+  let normalized = (degree - offset + 360) % 360
+  const index = Math.floor(normalized / (360 / 64))
+  const baguaString = L14_16_MASTER_DATA[index % 64].bagua
+  const baguaNumber = Number(baguaString.split(' ')[0])
+  return BAGUA_OPPOSITE[baguaNumber] || baguaString
+}
+
+function calculateL19(degree) {
+  // 338.0度を起点(インデックス0)にするためのオフセット計算
+  // 360等分ではなく、64スロット(1つ5.625度)として計算
+  const offset = 338.0
+  let normalized = (degree - offset + 360) % 360
+  
+  // 64等分した時のインデックスを算出
+  const index = Math.floor(normalized / (360 / 64))
+  
+  return L19_20_MASTER_DATA[index % 64].ganZhi
+}
+
+function calculateL20(degree) {
+  // 338.0度を起点(インデックス0)にするためのオフセット計算
+  // 360等分ではなく、64スロット(1つ5.625度)として計算
+  const offset = 338.0
+  let normalized = (degree - offset + 360) % 360
+  
+  // 64等分した時のインデックスを算出
+  const index = Math.floor(normalized / (360 / 64))
+  
+  return L19_20_MASTER_DATA[index % 64].attributeNineStar
+}
+
 const LOPAN_MASTER_DATA = [
   {
     symbol: '☷', gua: '坤', range: [338.0, 22.7],
@@ -262,6 +485,54 @@ const layers = [
     divisions: 120, // 24 * 5
     type: 'nested',
     data: L13_LIST
+  },
+  {
+    id: 'L14',
+    name: '八卦',
+    origin: 338,
+    divisions: 64,
+    type: 'bagua',
+    data: L14_16_MASTER_DATA
+  },
+  {
+    id: 'L15',
+    name: '卦名',
+    origin: 338,
+    divisions: 64,
+    type: 'guaName',
+    data: L14_16_MASTER_DATA
+  },
+  {
+    id: 'L16',
+    name: '九星方位',
+    origin: 338,
+    divisions: 64,
+    type: 'nineStar',
+    data: L14_16_MASTER_DATA
+  },
+  {
+    id: 'L17',
+    name: '外卦',
+    origin: 338,
+    divisions: 64,
+    type: 'oppositeBagua',
+    data: L14_16_MASTER_DATA
+  },
+  {
+    id: 'L19',
+    name: '干支',
+    origin: 338,
+    divisions: 64,
+    type: 'ganZhi',
+    data: L19_20_MASTER_DATA
+  },
+  {
+    id: 'L20',
+    name: '属性九星',
+    origin: 338,
+    divisions: 64,
+    type: 'attributeNineStar',
+    data: L19_20_MASTER_DATA
   }
 ]
 
@@ -331,6 +602,24 @@ function analyzeAllLayers(degree) {
       const parentIndex = Math.floor(normalized / 15) % 24
       const subIndex = Math.floor((normalized % 15) / 3) % 5
       result[layer.id] = layer.data[parentIndex][subIndex]
+    } else if (layer.type === 'bagua') {
+      // L14
+      result[layer.id] = calculateL14(degree)
+    } else if (layer.type === 'guaName') {
+      // L15
+      result[layer.id] = calculateL15(degree)
+    } else if (layer.type === 'nineStar') {
+      // L16
+      result[layer.id] = calculateL16(degree)
+    } else if (layer.type === 'oppositeBagua') {
+      // L17
+      result[layer.id] = calculateL17(degree)
+    } else if (layer.type === 'ganZhi') {
+      // L19
+      result[layer.id] = calculateL19(degree)
+    } else if (layer.type === 'attributeNineStar') {
+      // L20
+      result[layer.id] = calculateL20(degree)
     }
   })
 
