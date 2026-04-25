@@ -1,5 +1,159 @@
 const MOUNTAIN_LABELS = ['午','丁','未','坤','申','庚','酉','辛','戌','乾','亥','壬','子','癸','丑','艮','寅','甲','卯','乙','辰','巽','巳','丙']
 
+// L23: 第23層「二十八宿」マスターデータ
+const L23_TWENTY_EIGHT_STARS = [
+  { name: "危", start: 323, end: 343 },
+  { name: "虚", start: 343, end: 353 },
+  { name: "女", start: 353, end: 4 }, // 0度をまたぐ
+  { name: "牛", start: 4, end: 12 },
+  { name: "斗", start: 12, end: 36 },
+  { name: "箕", start: 36, end: 45 },
+  { name: "尾", start: 45, end: 60 },
+  { name: "心", start: 60, end: 68 },
+  { name: "房", start: 68, end: 73 },
+  { name: "氏", start: 73, end: 91 },
+  { name: "亢", start: 91, end: 102 },
+  { name: "角", start: 102, end: 113 },
+  { name: "軫", start: 113, end: 127 },
+  { name: "翌", start: 127, end: 144 },
+  { name: "張", start: 144, end: 161 },
+  { name: "星", start: 161, end: 169 },
+  { name: "柳", start: 169, end: 186 },
+  { name: "鬼", start: 186, end: 191 },
+  { name: "井", start: 191, end: 222 },
+  { name: "参", start: 222, end: 233 },
+  { name: "觜", start: 233, end: 234 },
+  { name: "畢", start: 234, end: 249 },
+  { name: "昂", start: 249, end: 258 },
+  { name: "胃", start: 258, end: 270 },
+  { name: "婁", start: 270, end: 283 },
+  { name: "奎", start: 283, end: 294 },
+  { name: "壁", start: 294, end: 309 },
+  { name: "室", start: 309, end: 323 }
+]
+
+// L24: 第24層「二十四節気」マスターデータ
+const L24_SOLAR_TERMS = [
+  { name: "啓蟄", start: 330, end: 345 },
+  { name: "春分", start: 315, end: 330 },
+  { name: "清明", start: 300, end: 315 },
+  { name: "穀雨", start: 285, end: 300 },
+  { name: "立夏", start: 270, end: 285 },
+  { name: "小満", start: 255, end: 270 },
+  { name: "芒種", start: 240, end: 255 },
+  { name: "夏至", start: 225, end: 240 },
+  { name: "小暑", start: 210, end: 225 },
+  { name: "大暑", start: 195, end: 210 },
+  { name: "立秋", start: 180, end: 195 },
+  { name: "処暑", start: 165, end: 180 },
+  { name: "白露", start: 150, end: 165 },
+  { name: "秋分", start: 135, end: 150 },
+  { name: "寒露", start: 120, end: 135 },
+  { name: "霜降", start: 105, end: 120 },
+  { name: "立冬", start: 90, end: 105 },
+  { name: "小雪", start: 75, end: 90 },
+  { name: "大雪", start: 60, end: 75 },
+  { name: "冬至", start: 45, end: 60 },
+  { name: "小寒", start: 30, end: 45 },
+  { name: "大寒", start: 15, end: 30 },
+  { name: "立春", start: 0, end: 15 },
+  { name: "雨水", start: 345, end: 360 }
+]
+
+// L25: 第25層「変則六十龍（透地）」マスターデータ
+const L25_TOUCHI_60_DRAGONS = [
+  { name: "辛水亥", start: 321.1, end: 328.1 },
+  { name: "癸木亥", start: 328.1, end: 334.2 },
+  { name: "甲金子", start: 336.2, end: 340 },
+  { name: "丙火子", start: 340, end: 345.2 },
+  { name: "戊水子", start: 345.2, end: 351 },
+  { name: "庚金子", start: 351, end: 356 },
+  { name: "壬木子", start: 356, end: 361 },
+  { name: "乙土丑", start: 1, end: 7 },
+  { name: "丁水丑", start: 7, end: 13 },
+  { name: "己金丑", start: 13, end: 19 },
+  { name: "辛木丑", start: 19, end: 24 },
+  { name: "癸土丑", start: 24, end: 29.5 },
+  { name: "丙火寅", start: 29.5, end: 35 },
+  { name: "戊木寅", start: 35, end: 37.5 },
+  { name: "戊火寅", start: 37.5, end: 42.5 },
+  { name: "庚金寅", start: 42.5, end: 48.1 },
+  { name: "壬水寅", start: 48.1, end: 53.6 },
+  { name: "甲土寅", start: 53.6, end: 61 },
+  { name: "丁木卯", start: 61, end: 66.5 },
+  { name: "己金卯", start: 66.5, end: 69.5 },
+  { name: "辛水卯", start: 69.5, end: 79.1 },
+  { name: "癸土卯", start: 79.1, end: 85 },
+  { name: "乙木卯", start: 85, end: 92.1 },
+  { name: "戊火辰", start: 92.1, end: 98 },
+  { name: "庚水辰", start: 98, end: 103 },
+  { name: "壬土辰", start: 103, end: 109.5 },
+  { name: "甲木辰", start: 109.5, end: 116.3 },
+  { name: "丙火辰", start: 116.3, end: 122.2 },
+  { name: "己金巳", start: 122.2, end: 129 },
+  { name: "辛木巳", start: 129, end: 135 },
+  { name: "発土巳", start: 135, end: 141.8 },
+  { name: "乙火巳", start: 141.8, end: 149 },
+  { name: "丁金巳", start: 149, end: 154.7 },
+  { name: "庚火午", start: 154.7, end: 159.8 },
+  { name: "壬土午", start: 159.8, end: 165 },
+  { name: "甲木午", start: 165, end: 171 },
+  { name: "丙火午", start: 171, end: 176.3 },
+  { name: "戊水午", start: 176.3, end: 181 },
+  { name: "辛金未", start: 181, end: 190 },
+  { name: "癸土未", start: 190, end: 194.1 },
+  { name: "乙水未", start: 194.1, end: 200 },
+  { name: "丁火未", start: 200, end: 208 },
+  { name: "己金未", start: 208, end: 213.9 },
+  { name: "壬木申", start: 213.9, end: 219.3 },
+  { name: "甲火申", start: 219.3, end: 224.2 },
+  { name: "丙水申", start: 224.2, end: 229 },
+  { name: "戊金申", start: 229, end: 236.5 },
+  { name: "庚木申", start: 236.5, end: 241.6 },
+  { name: "発土申", start: 241.6, end: 248.5 },
+  { name: "乙水酉", start: 248.5, end: 254.5 },
+  { name: "丁火酉", start: 254.5, end: 259.4 },
+  { name: "己木酉", start: 259.4, end: 266.2 },
+  { name: "辛土酉", start: 266.2, end: 272.8 },
+  { name: "甲金戌", start: 272.8, end: 278.1 },
+  { name: "丙土戌", start: 278.1, end: 283.1 },
+  { name: "戊水戌", start: 283.1, end: 291 },
+  { name: "庚金戌", start: 291, end: 296 },
+  { name: "壬火戌", start: 296, end: 303 },
+  { name: "乙木亥", start: 303, end: 309 },
+  { name: "丁火亥", start: 309, end: 315.5 },
+  { name: "己土亥", start: 315.5, end: 321.1 }
+]
+
+// L26: 第26層「精密分金（1度刻み配列）」マスターデータ
+const L26_VALUES = [
+  "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "六", "五", "四", "三", "二", "一", "無",
+  "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "九", "無", "七", "無", "五", "無", "三", "無", "一", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "七", "無", "五", "無", "三", "無", "一", "無", "無", "二十一", "無", "十九", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "九", "無", "七", "無", "五", "無", "三", "無", "一", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "五", "無", "三", "無", "一", "無", "五", "無", "三", "無", "一",
+  "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "九", "無", "七", "無", "五", "無", "三", "無", "一", "無", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "無", "十九", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "十九", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "無", "五", "無", "三", "無", "一", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "二十九", "無", "二十七", "無", "二十五", "無", "二十三", "無", "二十一", "無", "十九", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "九", "無", "七", "無", "五", "無", "三", "無", "一", "無", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一",
+  "無", "九", "無", "七", "無", "五", "無", "三", "無", "一", "無", "無", "十七", "無", "十五", "無", "十三", "無", "十一", "無", "九", "無", "七", "無", "五", "無", "三", "無", "一"
+]
+
+// L27: 第27層「吉凶シンボル分金（1度刻み配列）」マスターデータ
+const L27_SYMBOLS = [
+  "T", "無", "赤丸", "赤丸", "×", "×", "赤丸", "○", "亡", "赤丸", "×", "×", "赤丸", "赤丸", "赤丸", "×", "×", "○", "○", "無", "赤丸", "○", "○", "亡", "○", "赤丸", "×", "×", "赤丸", "赤丸", "無", "×", "×", "無", "赤丸", "赤丸", "赤丸", "×", "×", "○", "○", "○", "赤丸", "赤丸", "赤丸", "亡", "赤丸", "○", "×", "×", "赤丸", "赤丸", "無", "○", "×", "×", "赤丸", "○", "無", "無", "無",
+  "T", "赤丸", "赤丸", "赤丸", "○", "赤丸", "赤丸", "亡", "赤丸", "赤丸", "赤丸", "赤丸", "×", "×", "赤丸", "亡", "無", "無", "赤丸", "赤丸", "無", "○", "無", "亡", "×", "×", "赤丸", "○", "赤丸", "赤丸", "○", "×", "×", "無", "○", "無", "無", "×", "×", "赤丸", "赤丸", "無", "無", "赤丸", "赤丸", "○", "T", "T", "○", "○", "×", "×", "赤丸", "赤丸", "亡", "赤丸", "×", "×", "赤丸", "赤丸", "赤丸", "T", "T", "○", "赤丸", "無", "無", "無", "赤丸", "×", "×", "赤丸", "赤丸", "赤丸", "×", "×", "無", "T", "赤丸", "○", "無", "×", "×", "赤丸", "○", "無", "無", "○", "赤丸", "赤丸", "赤丸", "○", "T", "赤丸", "×", "×", "赤丸", "赤丸", "赤丸", "無", "亡", "×", "×", "赤丸", "無", "○", "赤丸", "×", "×", "無", "無", "無", "赤丸", "無", "赤丸", "亡", "赤丸", "赤丸", "赤丸", "赤丸", "×", "×", "赤丸", "亡", "○", "赤丸", "赤丸", "赤丸", "赤丸", "無", "亡", "赤丸", "×", "×", "赤丸", "無", "赤丸", "赤丸", "×", "×", "無", "無", "○", "赤丸", "赤丸", "赤丸", "亡", "赤丸", "赤丸", "×", "×", "無", "赤丸", "T", "赤丸", "赤丸", "無", "無", "無", "赤丸", "赤丸", "亡", "無", "赤丸", "赤丸", "赤丸", "赤丸", "×", "×", "無", "無", "無", "赤丸", "×", "×", "赤丸", "○", "○", "○", "無", "人", "×", "×", "赤丸", "T", "赤丸", "無", "×", "×", "赤丸", "赤丸", "亡", "○", "赤丸", "○", "赤丸", "赤丸", "○", "×", "×", "無", "無", "無", "赤丸", "○", "○", "赤丸", "人", "無", "赤丸", "赤丸", "×", "×", "無", "赤丸", "T", "×", "×", "無", "赤丸", "赤丸", "無", "○", "亡", "×", "×", "赤丸", "○", "人", "赤丸", "×", "×", "亡", "無", "赤丸", "無", "赤丸", "亡", "赤丸", "亡", "赤丸", "赤丸", "×", "×", "赤丸", "赤丸", "○", "無", "○", "○", "無", "赤丸", "赤丸", "人", "赤丸", "赤丸", "無", "赤丸", "赤丸", "×", "×", "亡", "赤丸", "赤丸", "○", "○", "無", "無", "赤丸", "亡", "赤丸", "無", "赤丸", "×", "×", "赤丸", "赤丸",
+  "○", "無", "赤丸", "○", "無", "無", "無", "亡", "赤丸", "赤丸", "赤丸", "赤丸", "○", "○", "赤丸", "亡", "赤丸", "無", "○", "赤丸", "赤丸", "×", "×", "無", "無", "赤丸", "赤丸", "無", "赤丸", "赤丸"
+]
+
 // 人盤（中針）専用のマスターデータ
 // 地盤から7.5度回転した独自の24山体系
 const JINBAN_24_DATA = [
@@ -304,6 +458,96 @@ function calculateL20(degree) {
   return L19_20_MASTER_DATA[index % 64].attributeNineStar
 }
 
+function calculateL23(degree) {
+  // 360度をまたぐ「女宿 (353°〜4°)」を正しく判定
+  for (const star of L23_TWENTY_EIGHT_STARS) {
+    if (star.start > star.end) {
+      // 360度をまたぐ場合
+      if (degree >= star.start || degree < star.end) {
+        return star.name
+      }
+    } else {
+      // 通常の範囲
+      if (degree >= star.start && degree < star.end) {
+        return star.name
+      }
+    }
+  }
+  return '不明'
+}
+
+function calculateL24(degree) {
+  // 360度をまたぐ「雨水 (345°〜360°)」を正しく判定
+  for (const term of L24_SOLAR_TERMS) {
+    if (term.start >= term.end) {
+      // 360度をまたぐ場合 (雨水: 345〜360)
+      if (degree >= term.start || degree < term.end) {
+        return term.name
+      }
+    } else {
+      // 通常の範囲
+      if (degree >= term.start && degree < term.end) {
+        return term.name
+      }
+    }
+  }
+  return '不明'
+}
+
+function calculateL25(degree) {
+  // 度数を0-360の範囲に正規化（361度は1度として扱う）
+  const normalizedDegree = degree % 360
+  
+  // 356〜361（つまり356〜1）にまたがる「壬木子」を含めた判定
+  for (const dragon of L25_TOUCHI_60_DRAGONS) {
+    if (dragon.start >= dragon.end) {
+      // 360度をまたぐ場合 (壬木子: 356〜361=1)
+      if (normalizedDegree >= dragon.start || normalizedDegree < dragon.end % 360) {
+        return dragon.name
+      }
+    } else {
+      // 通常の範囲
+      if (normalizedDegree >= dragon.start && normalizedDegree < dragon.end) {
+        return dragon.name
+      }
+    }
+  }
+  // データの隙間は「空」を返す
+  return '空'
+}
+
+function calculateL26(degree) {
+  // 起点角度
+  const START_DEGREE = 329.5
+  
+  // 度数を正規化してインデックスを計算
+  const index = Math.floor((degree - START_DEGREE + 360) % 360)
+  
+  // 配列の範囲内であれば値を返す
+  if (index >= 0 && index < L26_VALUES.length) {
+    return L26_VALUES[index]
+  }
+  
+  // 範囲外の場合は「無」を返す
+  return '無'
+}
+
+function calculateL27(degree) {
+  // 起点角度
+  const START_DEGREE = 329.5
+  
+  // 度数を正規化してインデックスを計算
+  const index = Math.floor((degree - START_DEGREE + 360) % 360)
+  
+  // 配列の範囲内であれば値を返す
+  if (index >= 0 && index < L27_SYMBOLS.length) {
+    return L27_SYMBOLS[index]
+  }
+  
+  // 範囲外の場合は「無」を返す
+  return '無'
+}
+
 const LOPAN_MASTER_DATA = [
   {
     symbol: '☷', gua: '坤', range: [338.0, 22.7],
@@ -533,6 +777,46 @@ const layers = [
     divisions: 64,
     type: 'attributeNineStar',
     data: L19_20_MASTER_DATA
+  },
+  {
+    id: 'L23',
+    name: '二十八宿',
+    origin: 0,
+    divisions: 28,
+    type: 'twentyEightStars',
+    data: L23_TWENTY_EIGHT_STARS
+  },
+  {
+    id: 'L24',
+    name: '二十四節気',
+    origin: 0,
+    divisions: 24,
+    type: 'solarTerms',
+    data: L24_SOLAR_TERMS
+  },
+  {
+    id: 'L25',
+    name: '変則六十龍（透地）',
+    origin: 0,
+    divisions: 60,
+    type: 'touchiDragons',
+    data: L25_TOUCHI_60_DRAGONS
+  },
+  {
+    id: 'L26',
+    name: '精密分金',
+    origin: 329.5,
+    divisions: 360,
+    type: 'precisionDivision',
+    data: L26_VALUES
+  },
+  {
+    id: 'L27',
+    name: '吉凶分金（神師）',
+    origin: 329.5,
+    divisions: 360,
+    type: 'fortuneSymbols',
+    data: L27_SYMBOLS
   }
 ]
 
@@ -620,6 +904,21 @@ function analyzeAllLayers(degree) {
     } else if (layer.type === 'attributeNineStar') {
       // L20
       result[layer.id] = calculateL20(degree)
+    } else if (layer.type === 'twentyEightStars') {
+      // L23
+      result[layer.id] = calculateL23(degree)
+    } else if (layer.type === 'solarTerms') {
+      // L24
+      result[layer.id] = calculateL24(degree)
+    } else if (layer.type === 'touchiDragons') {
+      // L25
+      result[layer.id] = calculateL25(degree)
+    } else if (layer.type === 'precisionDivision') {
+      // L26
+      result[layer.id] = calculateL26(degree)
+    } else if (layer.type === 'fortuneSymbols') {
+      // L27
+      result[layer.id] = calculateL27(degree)
     }
   })
 
